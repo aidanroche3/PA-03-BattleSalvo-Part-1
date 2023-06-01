@@ -53,6 +53,8 @@ public class Coord {
 
   /**
    * Determines if this coord is empty
+   *
+   * @return if the current coord is empty
    */
   public boolean isEmpty() {
     return this.type.equals(CoordType.EMPTY);

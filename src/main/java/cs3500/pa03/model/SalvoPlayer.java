@@ -10,11 +10,13 @@ import java.util.Random;
  */
 public abstract class SalvoPlayer implements Player {
 
+  // color constants
   private static final String ANSI_RESET = "\u001B[0m";
   private static final String ANSI_CYAN = "\u001B[36m";
   private static final String ANSI_RED = "\u001B[31m";
   public static final String ANSI_YELLOW = "\033[0;33m";
 
+  // salvo player fields
   protected List<Coord> currentTurnShots = new ArrayList<>();
   protected final String name;
   protected final Random random;
@@ -26,6 +28,7 @@ public abstract class SalvoPlayer implements Player {
    * Instantiates a BattleSalvo player
    *
    * @param name the name of the player
+   * @param random a random object
    */
   public SalvoPlayer(String name, Random random) {
     this.name = name;

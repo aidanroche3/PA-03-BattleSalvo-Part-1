@@ -14,6 +14,8 @@ public class ConsolePlayer extends SalvoPlayer {
    * Initializes a ConsolePlayer
    *
    * @param name the name of the player
+   * @param random a random object
+   * @param dependencies a console player's dependencies
    */
   public ConsolePlayer(String name, Random random, ConsolePlayerDependencies dependencies) {
     super(name, random);

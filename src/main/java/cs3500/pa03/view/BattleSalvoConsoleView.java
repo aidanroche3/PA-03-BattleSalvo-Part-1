@@ -15,6 +15,7 @@ public class BattleSalvoConsoleView implements BattleSalvoView {
   /**
    * Instantiates a BattleSalvoConsoleView
    *
+   * @param readable a readable source to read from
    * @param appendable an appendable to append the output to
    */
   public BattleSalvoConsoleView(Readable readable, Appendable appendable) {

@@ -20,6 +20,10 @@ public class BattleSalvoController implements Controller {
 
   /**
    * Instantiates a BattleSalvoController
+   *
+   * @param view a BattleSalvo view
+   * @param one player one
+   * @param two player two
    */
   public BattleSalvoController(BattleSalvoView view, SalvoPlayer one, SalvoPlayer two) {
     this.view = view;

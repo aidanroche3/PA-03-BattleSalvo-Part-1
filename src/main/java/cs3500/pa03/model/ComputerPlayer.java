@@ -14,6 +14,7 @@ public class ComputerPlayer extends SalvoPlayer {
   /**
    * Initializes a ComputerPlayer
    *
+   * @param random a random object
    */
   public ComputerPlayer(Random random) {
     super("Computer", random);
