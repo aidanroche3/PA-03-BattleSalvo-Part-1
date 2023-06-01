@@ -14,14 +14,19 @@ public abstract class SalvoPlayer implements Player {
   private static final String ANSI_RESET = "\u001B[0m";
   private static final String ANSI_CYAN = "\u001B[36m";
   private static final String ANSI_RED = "\u001B[31m";
-  public static final String ANSI_YELLOW = "\033[0;33m";
+  private static final String ANSI_YELLOW = "\033[0;33m";
 
-  // salvo player fields
+  // coord list of player's current turn
   protected List<Coord> currentTurnShots = new ArrayList<>();
+  // player's name
   protected final String name;
+  // random object
   protected final Random random;
+  // list of player's ships
   protected ArrayList<Ship> ships;
+  // the user's board
   protected Coord[][] userBoard;
+  // the opponent's board
   protected Coord[][] opponentBoard;
 
   /**
