@@ -184,7 +184,7 @@ public abstract class SalvoPlayer implements Player {
     }
     int count = 0;
     for (Ship s : ships) {
-      if (!s.isSunk()) {
+      if (s.stillAfloat()) {
         count++;
       }
     }
@@ -258,7 +258,7 @@ public abstract class SalvoPlayer implements Player {
    */
   public boolean gameOver() {
     for (Ship s : this.ships) {
-      if (!s.isSunk()) {
+      if (s.stillAfloat()) {
         return false;
       }
     }
