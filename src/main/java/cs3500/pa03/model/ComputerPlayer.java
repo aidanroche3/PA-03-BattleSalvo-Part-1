@@ -34,7 +34,7 @@ public class ComputerPlayer extends SalvoPlayer {
       int index = random.nextInt(this.remainingCoords.size());
       shots.add(remainingCoords.remove(index));
     }
-    this.currentTurnShots = shots;
+    setCurrentTurnShots(shots);
     return shots;
   }
 

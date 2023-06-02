@@ -194,6 +194,15 @@ public abstract class SalvoPlayer implements Player {
   public abstract List<Coord> takeShots();
 
   /**
+   * Sets a player's current turn shots
+   *
+   * @param shots the shots to set
+   */
+  public void setCurrentTurnShots(List<Coord> shots) {
+    this.currentTurnShots = shots;
+  }
+
+  /**
    * Gets the number of shots the player can take
    *
    * @return the count of shots they can take next turn
@@ -238,10 +247,6 @@ public abstract class SalvoPlayer implements Player {
     }
     checkSunk();
     return coordsHit;
-  }
-
-  public void setCurrentTurnShots(List<Coord> shots) {
-    this.currentTurnShots = shots;
   }
 
   /**
