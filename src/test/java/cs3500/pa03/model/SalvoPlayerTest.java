@@ -4,9 +4,6 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import cs3500.pa03.view.BattleSalvoConsoleView;
-import cs3500.pa03.view.BattleSalvoView;
-import java.io.StringReader;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -21,6 +18,12 @@ import org.junit.jupiter.api.Test;
  */
 class SalvoPlayerTest extends SalvoTest {
 
+  // color constants for output text
+  public static final String ANSI_RESET = "\u001B[0m";
+  public static final String ANSI_CYAN = "\u001B[36m";
+  private static final String ANSI_RED = "\u001B[31m";
+  private static final String ANSI_YELLOW = "\033[0;33m";
+
   private SalvoPlayer consolePlayer;
   private List<Ship> output;
 
@@ -29,16 +32,8 @@ class SalvoPlayerTest extends SalvoTest {
    */
   @BeforeEach
   public void setup() {
-    String input = """
-            1 0
-            2 0
-            3 0
-            4 0
-            """.replaceAll("\\n|\\r\\n", System.getProperty("line.separator"));
-    Readable readable = new StringReader(input);
-    BattleSalvoView view = new BattleSalvoConsoleView(readable, System.out);
     consolePlayer = new ConsolePlayer("User", new Random(1),
-        new ConsolePlayerDependencies(view));
+        new ConsolePlayerDependencies());
     HashMap<ShipType, Integer> specifications = new HashMap<>();
     specifications.put(ShipType.CARRIER, 1);
     specifications.put(ShipType.BATTLESHIP, 1);
@@ -136,5 +131,38 @@ class SalvoPlayerTest extends SalvoTest {
    */
   @Test
   void packageBoard() {
+    ArrayList<Coord> shots = new ArrayList<>();
+    shots.add(this.consolePlayer.userBoard[0][0]);
+    shots.add(this.consolePlayer.userBoard[0][1]);
+    this.consolePlayer.reportDamage(shots);
+    this.consolePlayer.successfulHits(shots);
+    String userBoard =
+        ANSI_RED + "H" + ANSI_RESET + " " + ANSI_YELLOW + "M" + ANSI_RESET + " "
+            + ANSI_CYAN + "S" + ANSI_RESET + " " + ANSI_CYAN
+        + "S" + ANSI_RESET + " " + ANSI_CYAN + "S" + ANSI_RESET + " * "
+            + System.getProperty("line.separator")
+        + ANSI_CYAN + "C" + ANSI_RESET + " " + ANSI_CYAN + "B" + ANSI_RESET + " * * * * "
+        + System.getProperty("line.separator")
+        + ANSI_CYAN + "C" + ANSI_RESET + " " + ANSI_CYAN + "B" + ANSI_RESET + " * * * * "
+            + System.getProperty("line.separator")
+        + ANSI_CYAN + "C" + ANSI_RESET + " " + ANSI_CYAN + "B" + ANSI_RESET + " * * * * "
+        + System.getProperty("line.separator")
+        + ANSI_CYAN + "C" + ANSI_RESET + " " + ANSI_CYAN + "B" + ANSI_RESET + " "
+        + ANSI_CYAN + "D" + ANSI_RESET + " " + ANSI_CYAN + "D" + ANSI_RESET
+            + " " + ANSI_CYAN + "D" + ANSI_RESET + " " + ANSI_CYAN + "D" + ANSI_RESET + " "
+            + System.getProperty("line.separator")
+        + ANSI_CYAN + "C" + ANSI_RESET + " " + ANSI_CYAN + "B" + ANSI_RESET + " * * * * "
+        + System.getProperty("line.separator");
+    String opponentBoard =
+        ANSI_RED + "H" + ANSI_RESET + " " + ANSI_YELLOW + "M" + ANSI_RESET + " * * * * "
+        + System.getProperty("line.separator")
+        + "* * * * * * " + System.getProperty("line.separator")
+        + "* * * * * * " + System.getProperty("line.separator")
+        + "* * * * * * " + System.getProperty("line.separator")
+        + "* * * * * * " + System.getProperty("line.separator")
+        + "* * * * * * " + System.getProperty("line.separator").replaceAll(
+        "\\n|\\r\\n", System.getProperty("line.separator"));
+    assertEquals(userBoard, consolePlayer.packageBoard(BoardType.USER));
+    assertEquals(opponentBoard, consolePlayer.packageBoard(BoardType.OPPONENT));
   }
 }

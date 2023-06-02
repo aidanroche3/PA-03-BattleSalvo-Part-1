@@ -23,6 +23,24 @@ public class ConsolePlayer extends SalvoPlayer {
   }
 
   /**
+   * Gets this player's dependencies
+   *
+   * @return this console player's dependencies
+   */
+  public ConsolePlayerDependencies getDependencies() {
+    return this.dependencies;
+  }
+
+  /**
+   * Gets the opponent's board
+   *
+   * @return a Coord[][] of the opponent's board
+   */
+  public Coord[][] getOpponentBoard() {
+    return this.opponentBoard;
+  }
+
+  /**
    * Returns this player's shots on the opponent's board. The number of shots returned should
    * equal the number of ships on this player's board that have not sunk.
    *
@@ -30,33 +48,7 @@ public class ConsolePlayer extends SalvoPlayer {
    */
   @Override
   public List<Coord> takeShots() {
-    this.dependencies.clearShots();
-    int shotCount = this.getShotCount();
-    this.dependencies.getView().shots(shotCount);
-    while (this.dependencies.getCurrentTurn().size() < shotCount) {
-      try {
-        String[] shots = this.dependencies.getView().read();
-        if (shots.length == 2) {
-          int row = Integer.parseInt(shots[0]);
-          int col = Integer.parseInt(shots[1]);
-          if (row >= 0 && row < this.opponentBoard.length
-              && col >= 0 && col < this.opponentBoard[row].length
-              && !this.dependencies.getAllShots().contains(this.opponentBoard[row][col])) {
-            this.dependencies.addCoord(this.opponentBoard[row][col]);
-          } else {
-            throw new IllegalArgumentException("Invalid shot.");
-          }
-        } else {
-          throw new IllegalArgumentException("Invalid shot.");
-        }
-      } catch (Exception e) {
-        this.dependencies.getView().invalidShots(shotCount
-            - this.dependencies.getCurrentTurn().size());
-      }
-    }
-    List<Coord> currentTurn = dependencies.getCurrentTurn();
-    this.currentTurnShots = currentTurn;
-    return currentTurn;
+    return this.dependencies.getCurrentTurn();
   }
 
 }

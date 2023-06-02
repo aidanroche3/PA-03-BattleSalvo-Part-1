@@ -1,6 +1,5 @@
 package cs3500.pa03.model;
 
-import cs3500.pa03.view.BattleSalvoView;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -11,16 +10,6 @@ public class ConsolePlayerDependencies {
 
   private final ArrayList<Coord> currentTurn = new ArrayList<>();
   private final ArrayList<Coord> allShots = new ArrayList<>();
-  private final BattleSalvoView view;
-
-  /**
-   * Instantiates a ConsolePlayerDependencies
-   *
-   * @param view a BattleSalvoView
-   */
-  public ConsolePlayerDependencies(BattleSalvoView view) {
-    this.view = view;
-  }
 
   /**
    * Adds a coordinate to the player's current turn
@@ -29,13 +18,13 @@ public class ConsolePlayerDependencies {
    */
   public void addCoord(Coord c) {
     this.currentTurn.add(c);
+    this.allShots.add(c);
   }
 
   /**
    * Clears the shots of the current turn and adds them to the all time shots
    */
   public void clearShots() {
-    this.allShots.addAll(currentTurn);
     this.currentTurn.clear();
   }
 
@@ -57,13 +46,5 @@ public class ConsolePlayerDependencies {
     return List.copyOf(allShots);
   }
 
-  /**
-   * Gets the view module
-   *
-   * @return a BattleSalvoView
-   */
-  public BattleSalvoView getView() {
-    return this.view;
-  }
 
 }

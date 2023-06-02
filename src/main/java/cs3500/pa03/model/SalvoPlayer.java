@@ -198,7 +198,7 @@ public abstract class SalvoPlayer implements Player {
    *
    * @return the count of shots they can take next turn
    */
-  protected int getShotCount() {
+  public int getShotCount() {
     int emptySpots = 0;
     for (Coord[] coords : opponentBoard) {
       for (Coord c : coords) {

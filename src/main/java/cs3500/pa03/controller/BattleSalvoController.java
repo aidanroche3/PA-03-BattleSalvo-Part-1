@@ -1,6 +1,8 @@
 package cs3500.pa03.controller;
 
 import cs3500.pa03.model.BoardType;
+import cs3500.pa03.model.ConsolePlayer;
+import cs3500.pa03.model.ConsolePlayerDependencies;
 import cs3500.pa03.model.Coord;
 import cs3500.pa03.model.GameResult;
 import cs3500.pa03.model.SalvoPlayer;
@@ -15,7 +17,7 @@ import java.util.List;
 public class BattleSalvoController implements Controller {
 
   private final BattleSalvoView view;
-  private final SalvoPlayer playerOne;
+  private final ConsolePlayer playerOne;
   private final SalvoPlayer playerTwo;
 
   /**
@@ -25,7 +27,7 @@ public class BattleSalvoController implements Controller {
    * @param one player one
    * @param two player two
    */
-  public BattleSalvoController(BattleSalvoView view, SalvoPlayer one, SalvoPlayer two) {
+  public BattleSalvoController(BattleSalvoView view, ConsolePlayer one, SalvoPlayer two) {
     this.view = view;
     this.playerOne = one;
     this.playerTwo = two;
@@ -45,7 +47,7 @@ public class BattleSalvoController implements Controller {
   /**
    * Accepts the board size and fleet size from the user
    */
-  public void acceptSpecifications() {
+  private void acceptSpecifications() {
 
     // accepting board size
     view.dimensions();
@@ -138,6 +140,7 @@ public class BattleSalvoController implements Controller {
           playerOne.packageBoard(BoardType.USER));
       view.displayBoard(playerTwo.name(),
           playerTwo.packageBoard(BoardType.OPPONENT));
+      takePlayerInput(playerOne);
       List<Coord> playerOneShots = playerOne.takeShots();
       List<Coord> playerTwoShots = playerTwo.takeShots();
       List<Coord> playerOneHits = playerTwo.reportDamage(playerOneShots);
@@ -152,6 +155,44 @@ public class BattleSalvoController implements Controller {
     end();
   }
 
+  /**
+   * Takes player input from a ConsolePlayer
+   *
+   * @param player a console player
+   */
+  private void takePlayerInput(ConsolePlayer player) {
+    ConsolePlayerDependencies dependencies = player.getDependencies();
+    dependencies.clearShots();
+    int shotCount = player.getShotCount();
+    view.shots(shotCount);
+    while (dependencies.getCurrentTurn().size() < shotCount) {
+      try {
+        String[] shots = view.read();
+        if (shots.length == 2) {
+          int row = Integer.parseInt(shots[0]);
+          int col = Integer.parseInt(shots[1]);
+          Coord[][] opponentBoard = player.getOpponentBoard();
+          if (row >= 0 && row < opponentBoard.length
+              && col >= 0 && col < opponentBoard[row].length
+              && !dependencies.getAllShots().contains(opponentBoard[row][col])) {
+            dependencies.addCoord(opponentBoard[row][col]);
+          } else {
+            throw new IllegalArgumentException("Invalid shot.");
+          }
+        } else {
+          throw new IllegalArgumentException("Invalid shot.");
+        }
+      } catch (Exception e) {
+        view.invalidShots(shotCount
+            - dependencies.getCurrentTurn().size());
+      }
+    }
+
+  }
+
+  /**
+   * Ends the BattleSalvo game
+   */
   private void end() {
     GameResult playerOneResult;
     GameResult playerTwoResult;
@@ -173,6 +214,5 @@ public class BattleSalvoController implements Controller {
     playerTwo.endGame(playerTwoResult, reason);
     view.result(playerOneResult, reason);
   }
-
 
 }
