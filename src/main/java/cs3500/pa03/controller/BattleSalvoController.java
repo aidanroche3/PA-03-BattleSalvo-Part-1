@@ -140,13 +140,14 @@ public class BattleSalvoController implements Controller {
           playerOne.packageBoard(BoardType.USER));
       view.displayBoard(playerTwo.name(),
           playerTwo.packageBoard(BoardType.OPPONENT));
-      takePlayerInput(playerOne);
+      takePlayerInput();
       List<Coord> playerOneShots = playerOne.takeShots();
       List<Coord> playerTwoShots = playerTwo.takeShots();
       List<Coord> playerOneHits = playerTwo.reportDamage(playerOneShots);
       List<Coord> playerTwoHits = playerOne.reportDamage(playerTwoShots);
       playerOne.successfulHits(playerOneHits);
       playerTwo.successfulHits(playerTwoHits);
+      playerOne.getDependencies().clearShots();
     }
     view.displayBoard(playerOne.name(),
         playerOne.packageBoard(BoardType.USER));
@@ -158,20 +159,19 @@ public class BattleSalvoController implements Controller {
   /**
    * Takes player input from a ConsolePlayer
    *
-   * @param player a console player
    */
-  private void takePlayerInput(ConsolePlayer player) {
-    ConsolePlayerDependencies dependencies = player.getDependencies();
+  private void takePlayerInput() {
+    int shotCount = playerOne.getShotCount();
+    ConsolePlayerDependencies dependencies = playerOne.getDependencies();
     dependencies.clearShots();
-    int shotCount = player.getShotCount();
     view.shots(shotCount);
+    Coord[][] opponentBoard = playerOne.getOpponentBoard();
     while (dependencies.getCurrentTurn().size() < shotCount) {
       try {
         String[] shots = view.read();
         if (shots.length == 2) {
           int row = Integer.parseInt(shots[0]);
           int col = Integer.parseInt(shots[1]);
-          Coord[][] opponentBoard = player.getOpponentBoard();
           if (row >= 0 && row < opponentBoard.length
               && col >= 0 && col < opponentBoard[row].length
               && !dependencies.getAllShots().contains(opponentBoard[row][col])) {
@@ -187,7 +187,7 @@ public class BattleSalvoController implements Controller {
             - dependencies.getCurrentTurn().size());
       }
     }
-
+    playerOne.setCurrentTurnShots(dependencies.getCurrentTurn());
   }
 
   /**

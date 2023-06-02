@@ -200,9 +200,9 @@ public abstract class SalvoPlayer implements Player {
    */
   public int getShotCount() {
     int emptySpots = 0;
-    for (Coord[] coords : opponentBoard) {
+    for (Coord[] coords : this.opponentBoard) {
       for (Coord c : coords) {
-        if (c.getType().equals(CoordType.EMPTY)) {
+        if (c.isEmpty()) {
           emptySpots++;
         }
       }
@@ -240,6 +240,10 @@ public abstract class SalvoPlayer implements Player {
     return coordsHit;
   }
 
+  public void setCurrentTurnShots(List<Coord> shots) {
+    this.currentTurnShots = shots;
+  }
+
   /**
    * Reports to this player what shots in their previous volley returned from takeShots()
    * successfully hit an opponent's ship.
@@ -270,7 +274,7 @@ public abstract class SalvoPlayer implements Player {
           break;
         }
       }
-      if (sunk) {
+      if (sunk && s.stillAfloat()) {
         s.sink();
       }
     }

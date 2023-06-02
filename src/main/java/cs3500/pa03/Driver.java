@@ -22,8 +22,8 @@ public class Driver {
   public static void main(String[] args) {
     BattleSalvoView view = new BattleSalvoConsoleView(new InputStreamReader(System.in), System.out);
     ConsolePlayer playerOne = new ConsolePlayer("User",
-        new Random(1), new ConsolePlayerDependencies());
-    SalvoPlayer playerTwo = new ComputerPlayer(new Random(1));
+        new Random(), new ConsolePlayerDependencies());
+    SalvoPlayer playerTwo = new ComputerPlayer(new Random());
     new BattleSalvoController(view, playerOne, playerTwo).run();
   }
 }

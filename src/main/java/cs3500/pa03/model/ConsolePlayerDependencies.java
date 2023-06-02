@@ -22,7 +22,7 @@ public class ConsolePlayerDependencies {
   }
 
   /**
-   * Clears the shots of the current turn and adds them to the all time shots
+   * Clears the shots of the current turn and adds them to the all-time shots
    */
   public void clearShots() {
     this.currentTurn.clear();
@@ -34,7 +34,7 @@ public class ConsolePlayerDependencies {
    * @return a list of the shots the user has fired this turn
    */
   public List<Coord> getCurrentTurn() {
-    return List.copyOf(currentTurn);
+    return List.copyOf(this.currentTurn);
   }
 
   /**
@@ -43,7 +43,7 @@ public class ConsolePlayerDependencies {
    * @return a list of shots the user has shot at throughout the game
    */
   public List<Coord> getAllShots() {
-    return List.copyOf(allShots);
+    return List.copyOf(this.allShots);
   }
 
 

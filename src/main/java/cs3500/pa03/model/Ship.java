@@ -49,6 +49,11 @@ public class Ship {
     this.sunk = true;
   }
 
+  /**
+   * Returns the first letter of the ship type
+   *
+   * @return a single character String representing the ship type
+   */
   @Override
   public String toString() {
     return this.type.toString().substring(0, 1);
