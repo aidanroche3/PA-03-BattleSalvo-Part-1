@@ -5,7 +5,6 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import cs3500.pa03.model.ComputerPlayer;
 import cs3500.pa03.model.ConsolePlayer;
 import cs3500.pa03.model.ConsolePlayerDependencies;
-import cs3500.pa03.model.SalvoPlayer;
 import cs3500.pa03.view.BattleSalvoConsoleView;
 import cs3500.pa03.view.BattleSalvoView;
 import java.io.StringReader;
@@ -72,7 +71,7 @@ class BattleSalvoControllerTest {
     BattleSalvoView winView = new BattleSalvoConsoleView(winInput, winOutput);
     ConsolePlayer winPlayerOne = new ConsolePlayer("User", new Random(1),
         new ConsolePlayerDependencies());
-    SalvoPlayer winPlayerTwo = new ComputerPlayer(new Random(1));
+    ComputerPlayer winPlayerTwo = new ComputerPlayer(new Random(1));
     BattleSalvoController winController =
         new BattleSalvoController(winView, winPlayerOne, winPlayerTwo);
     String expected = """
@@ -343,7 +342,7 @@ class BattleSalvoControllerTest {
     BattleSalvoView loseView = new BattleSalvoConsoleView(loseInput, loseOutput);
     ConsolePlayer losePlayerOne = new ConsolePlayer("User", new Random(1),
         new ConsolePlayerDependencies());
-    SalvoPlayer losePlayerTwo = new ComputerPlayer(new Random(1));
+    ComputerPlayer losePlayerTwo = new ComputerPlayer(new Random(1));
     BattleSalvoController loseController =
         new BattleSalvoController(loseView, losePlayerOne, losePlayerTwo);
     loseController.run();
@@ -564,7 +563,7 @@ class BattleSalvoControllerTest {
     BattleSalvoView drawView = new BattleSalvoConsoleView(drawInput, drawOutput);
     ConsolePlayer drawPlayerOne = new ConsolePlayer("User", new Random(1),
         new ConsolePlayerDependencies());
-    SalvoPlayer drawPlayerTwo = new ComputerPlayer(new Random(1));
+    ComputerPlayer drawPlayerTwo = new ComputerPlayer(new Random(1));
     BattleSalvoController drawController =
         new BattleSalvoController(drawView, drawPlayerOne, drawPlayerTwo);
     drawController.run();

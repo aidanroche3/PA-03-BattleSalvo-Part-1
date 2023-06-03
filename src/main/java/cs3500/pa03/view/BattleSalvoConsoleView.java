@@ -1,6 +1,11 @@
 package cs3500.pa03.view;
 
+import cs3500.pa03.model.BoardType;
+import cs3500.pa03.model.Coord;
+import cs3500.pa03.model.CoordType;
 import cs3500.pa03.model.GameResult;
+import cs3500.pa03.model.SalvoPlayer;
+import cs3500.pa03.model.Ship;
 import java.io.IOException;
 import java.util.Scanner;
 
@@ -8,6 +13,12 @@ import java.util.Scanner;
  * Class for displaying the BattleSalvo game to the console
  */
 public class BattleSalvoConsoleView implements BattleSalvoView {
+
+  // color constants
+  private static final String ANSI_RESET = "\u001B[0m";
+  private static final String ANSI_CYAN = "\u001B[36m";
+  private static final String ANSI_RED = "\u001B[31m";
+  private static final String ANSI_YELLOW = "\033[0;33m";
 
   private final Scanner scanner;
   private final Appendable appendable;
@@ -150,17 +161,63 @@ public class BattleSalvoConsoleView implements BattleSalvoView {
    * @param board  the player's board
    */
   @Override
-  public void displayBoard(String player, String board) {
+  public void displayBoard(SalvoPlayer player, Coord[][] board, BoardType type) {
     try {
       separator();
-      appendable.append(player).append("'s board:");
+      appendable.append(player.name()).append("'s board:");
       appendable.append(System.getProperty("line.separator"));
       appendable.append(System.getProperty("line.separator"));
-      appendable.append(board);
+      String packagedBoard = packageBoard(player, board, type);
+      appendable.append(packagedBoard);
       appendable.append(System.getProperty("line.separator"));
     } catch (IOException e) {
       throw new RuntimeException(e);
     }
+  }
+
+  /**
+   * Packages a board into a String
+   *
+   * @param player the player that's board will be packaged
+   * @param board the board to package
+   * @param type the visibility level to display the board
+   * @return a board packaged into a String
+   */
+  private String packageBoard(SalvoPlayer player, Coord[][] board, BoardType type) {
+    StringBuilder packagedBoard = new StringBuilder();
+    for (Coord[] coords : board) {
+      for (Coord coord : coords) {
+        CoordType coordType = coord.getType();
+        if (type.equals(BoardType.USER)) {
+          switch (coordType) {
+            case HIT ->
+                packagedBoard.append(ANSI_RED).append(coordType).append(ANSI_RESET).append(" ");
+            case MISS ->
+                packagedBoard.append(ANSI_YELLOW).append(coordType).append(ANSI_RESET).append(" ");
+            case SHIP -> {
+              String symbol = " ";
+              for (Ship s : player.getShips()) {
+                if (s.getCoords().contains(coord)) {
+                  symbol = s.toString();
+                }
+              }
+              packagedBoard.append(ANSI_CYAN).append(symbol).append(ANSI_RESET).append(" ");
+            }
+            default -> packagedBoard.append(CoordType.EMPTY).append(" ");
+          }
+        } else {
+          switch (coordType) {
+            case HIT ->
+                packagedBoard.append(ANSI_RED).append(coordType).append(ANSI_RESET).append(" ");
+            case MISS ->
+                packagedBoard.append(ANSI_YELLOW).append(coordType).append(ANSI_RESET).append(" ");
+            default -> packagedBoard.append(CoordType.EMPTY).append(" ");
+          }
+        }
+      }
+      packagedBoard.append(System.getProperty("line.separator"));
+    }
+    return packagedBoard.toString();
   }
 
   /**

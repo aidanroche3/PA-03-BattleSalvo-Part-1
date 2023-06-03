@@ -47,7 +47,7 @@ public class Coord {
    *
    * @return the type of coord
    */
-  CoordType getType() {
+  public CoordType getType() {
     return this.type;
   }
 

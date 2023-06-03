@@ -1,11 +1,11 @@
 package cs3500.pa03.controller;
 
 import cs3500.pa03.model.BoardType;
+import cs3500.pa03.model.ComputerPlayer;
 import cs3500.pa03.model.ConsolePlayer;
 import cs3500.pa03.model.ConsolePlayerDependencies;
 import cs3500.pa03.model.Coord;
 import cs3500.pa03.model.GameResult;
-import cs3500.pa03.model.SalvoPlayer;
 import cs3500.pa03.model.ShipType;
 import cs3500.pa03.view.BattleSalvoView;
 import java.util.HashMap;
@@ -18,7 +18,7 @@ public class BattleSalvoController implements Controller {
 
   private final BattleSalvoView view;
   private final ConsolePlayer playerOne;
-  private final SalvoPlayer playerTwo;
+  private final ComputerPlayer playerTwo;
 
   /**
    * Instantiates a BattleSalvoController
@@ -27,7 +27,7 @@ public class BattleSalvoController implements Controller {
    * @param one player one
    * @param two player two
    */
-  public BattleSalvoController(BattleSalvoView view, ConsolePlayer one, SalvoPlayer two) {
+  public BattleSalvoController(BattleSalvoView view, ConsolePlayer one, ComputerPlayer two) {
     this.view = view;
     this.playerOne = one;
     this.playerTwo = two;
@@ -136,10 +136,8 @@ public class BattleSalvoController implements Controller {
    */
   private void play() {
     while (!playerOne.gameOver() && !playerTwo.gameOver()) {
-      view.displayBoard(playerOne.name(),
-          playerOne.packageBoard(BoardType.USER));
-      view.displayBoard(playerTwo.name(),
-          playerTwo.packageBoard(BoardType.OPPONENT));
+      view.displayBoard(playerOne, playerOne.getUserBoard(), BoardType.USER);
+      view.displayBoard(playerTwo, playerTwo.getUserBoard(), BoardType.OPPONENT);
       takePlayerInput();
       List<Coord> playerOneShots = playerOne.takeShots();
       List<Coord> playerTwoShots = playerTwo.takeShots();
@@ -149,10 +147,8 @@ public class BattleSalvoController implements Controller {
       playerTwo.successfulHits(playerTwoHits);
       playerOne.getDependencies().clearShots();
     }
-    view.displayBoard(playerOne.name(),
-        playerOne.packageBoard(BoardType.USER));
-    view.displayBoard(playerTwo.name(),
-        playerTwo.packageBoard(BoardType.USER));
+    view.displayBoard(playerOne, playerOne.getUserBoard(), BoardType.USER);
+    view.displayBoard(playerTwo, playerTwo.getUserBoard(), BoardType.USER);
     end();
   }
 
@@ -161,9 +157,9 @@ public class BattleSalvoController implements Controller {
    *
    */
   private void takePlayerInput() {
-    int shotCount = playerOne.getShotCount();
     ConsolePlayerDependencies dependencies = playerOne.getDependencies();
     dependencies.clearShots();
+    int shotCount = playerOne.getShotCount();
     view.shots(shotCount);
     Coord[][] opponentBoard = playerOne.getOpponentBoard();
     while (dependencies.getCurrentTurn().size() < shotCount) {

@@ -1,6 +1,9 @@
 package cs3500.pa03.view;
 
+import cs3500.pa03.model.BoardType;
+import cs3500.pa03.model.Coord;
 import cs3500.pa03.model.GameResult;
+import cs3500.pa03.model.SalvoPlayer;
 
 /**
  * Interface for displaying a BattleSalvo game
@@ -63,7 +66,7 @@ public interface BattleSalvoView {
    * @param player the player to display
    * @param board the player's board
    */
-  void displayBoard(String player, String board);
+  void displayBoard(SalvoPlayer player, Coord[][] board, BoardType type);
 
   /**
    * Displays the result of the game

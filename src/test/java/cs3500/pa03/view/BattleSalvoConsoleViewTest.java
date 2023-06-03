@@ -4,21 +4,25 @@ import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
+import cs3500.pa03.model.BoardType;
+import cs3500.pa03.model.ConsolePlayer;
+import cs3500.pa03.model.ConsolePlayerDependencies;
 import cs3500.pa03.model.GameResult;
+import cs3500.pa03.model.SalvoPlayer;
+import cs3500.pa03.model.ShipType;
 import java.io.StringReader;
+import java.util.HashMap;
+import java.util.Random;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 class BattleSalvoConsoleViewTest {
 
-  // color constants for output text
-  public static final String ANSI_RESET = "\u001B[0m";
-  public static final String ANSI_CYAN = "\u001B[36m";
-
   private Readable input;
   private StringBuilder output;
   private BattleSalvoConsoleView battleSalvoConsoleView;
   private BattleSalvoConsoleView mockConsoleView;
+  private SalvoPlayer player;
 
   /**
    * Instantiates the test data
@@ -30,6 +34,13 @@ class BattleSalvoConsoleViewTest {
     MockAppendable mockAppendable = new MockAppendable();
     battleSalvoConsoleView = new BattleSalvoConsoleView(input, output);
     mockConsoleView = new BattleSalvoConsoleView(input, mockAppendable);
+    player = new ConsolePlayer("User", new Random(1), new ConsolePlayerDependencies());
+    HashMap<ShipType, Integer> specifications = new HashMap<>();
+    specifications.put(ShipType.CARRIER, 1);
+    specifications.put(ShipType.BATTLESHIP, 2);
+    specifications.put(ShipType.DESTROYER, 1);
+    specifications.put(ShipType.SUBMARINE, 1);
+    player.setup(6, 6, specifications);
   }
 
   /**
@@ -147,42 +158,49 @@ class BattleSalvoConsoleViewTest {
   }
 
   /**
-   * Tests the displayBoard method
+   * Tests the displayBoard method for a user
    */
   @Test
-  void testDisplayBoard() {
-    String board =
-        ANSI_CYAN + "C" + ANSI_RESET + " " + ANSI_CYAN + "B B B B B " + ANSI_RESET
-            + System.getProperty("line.separator")
-        + ANSI_CYAN + "C" + ANSI_RESET + " * * * * * "
-            + System.getProperty("line.separator")
-        + ANSI_CYAN + "C" + ANSI_RESET + " * " + ANSI_CYAN + "D" + ANSI_RESET + " * * * "
-            + System.getProperty("line.separator")
-        + ANSI_CYAN + "C" + ANSI_RESET + " * " + ANSI_CYAN + "D" + ANSI_RESET + " * * * "
-            + System.getProperty("line.separator")
-        + ANSI_CYAN + "C" + ANSI_RESET + " * " + ANSI_CYAN + "D" + ANSI_RESET + " "
-        + ANSI_CYAN + "S S S " + ANSI_RESET + System.getProperty("line.separator")
-        + ANSI_CYAN + "C" + ANSI_RESET + " * " + ANSI_CYAN + "D" + ANSI_RESET + " * * * ";
-    String boardFormatted = "-----------------------------------------------------"
-        + System.getProperty("line.separator")
-        + "User's board:"
-        + System.getProperty("line.separator")
-        + System.getProperty("line.separator")
-        + ANSI_CYAN + "C" + ANSI_RESET + " " + ANSI_CYAN + "B B B B B " + ANSI_RESET
-        + System.getProperty("line.separator")
-        + ANSI_CYAN + "C" + ANSI_RESET + " * * * * * "
-        + System.getProperty("line.separator")
-        + ANSI_CYAN + "C" + ANSI_RESET + " * " + ANSI_CYAN + "D" + ANSI_RESET + " * * * "
-        + System.getProperty("line.separator")
-        + ANSI_CYAN + "C" + ANSI_RESET + " * " + ANSI_CYAN + "D" + ANSI_RESET + " * * * "
-        + System.getProperty("line.separator")
-        + ANSI_CYAN + "C" + ANSI_RESET + " * " + ANSI_CYAN + "D" + ANSI_RESET + " "
-        + ANSI_CYAN + "S S S " + ANSI_RESET + System.getProperty("line.separator")
-        + ANSI_CYAN + "C" + ANSI_RESET + " * " + ANSI_CYAN + "D" + ANSI_RESET + " * * * "
-        + System.getProperty("line.separator");
-    battleSalvoConsoleView.displayBoard("User", board);
-    assertEquals(boardFormatted, output.toString());
-    assertThrows(RuntimeException.class, () -> mockConsoleView.displayBoard("User", board));
+  void testDisplayBoardUser() {
+    String userExpected = """
+        -----------------------------------------------------
+        User's board:
+                
+        [36mC[0m [36mB[0m [36mB[0m [36mB[0m [36mB[0m [36mB[0m\s
+        [36mC[0m [36mB[0m * * * *\s
+        [36mC[0m [36mB[0m [36mD[0m [36mD[0m [36mD[0m [36mD[0m\s
+        [36mC[0m [36mB[0m * [36mS[0m [36mS[0m [36mS[0m\s
+        [36mC[0m [36mB[0m * * * *\s
+        [36mC[0m [36mB[0m * * * *\s
+        
+        """.replaceAll("\\n|\\r\\n", System.getProperty("line.separator"));
+    battleSalvoConsoleView.displayBoard(player, player.getUserBoard(), BoardType.USER);
+    assertEquals(userExpected, output.toString());
+    assertThrows(RuntimeException.class, () ->
+        mockConsoleView.displayBoard(player, player.getUserBoard(), BoardType.USER));
+  }
+
+  /**
+   * Tests the displayBoard method for an opponent
+   */
+  @Test
+  void testDisplayBoardOpponent() {
+    String opponentExpected = """
+        -----------------------------------------------------
+        User's board:
+                
+        * * * * * *\s
+        * * * * * *\s
+        * * * * * *\s
+        * * * * * *\s
+        * * * * * *\s
+        * * * * * *\s
+                
+        """.replaceAll("\\n|\\r\\n", System.getProperty("line.separator"));
+    battleSalvoConsoleView.displayBoard(player, player.getUserBoard(), BoardType.OPPONENT);
+    assertEquals(opponentExpected, output.toString());
+    assertThrows(RuntimeException.class, () ->
+        mockConsoleView.displayBoard(player, player.getUserBoard(), BoardType.OPPONENT));
   }
 
   /**

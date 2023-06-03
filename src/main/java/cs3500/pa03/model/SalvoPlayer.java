@@ -10,17 +10,6 @@ import java.util.Random;
  */
 public abstract class SalvoPlayer implements Player {
 
-  // color constants
-  private static final String ANSI_RESET = "\u001B[0m";
-  private static final String ANSI_CYAN = "\u001B[36m";
-  private static final String ANSI_RED = "\u001B[31m";
-  private static final String ANSI_YELLOW = "\033[0;33m";
-
-  /**
-   * Coordinate list of player's current shots
-   */
-  protected List<Coord> currentTurnShots = new ArrayList<>();
-
   /**
    * Player's name
    */
@@ -45,6 +34,11 @@ public abstract class SalvoPlayer implements Player {
    * The opponent's board
    */
   protected Coord[][] opponentBoard;
+
+  /**
+   * Coordinate list of player's current shots
+   */
+  protected List<Coord> currentTurnShots = new ArrayList<>();
 
   /**
    * Instantiates a BattleSalvo player
@@ -226,6 +220,24 @@ public abstract class SalvoPlayer implements Player {
   }
 
   /**
+   * Gets the user's list of ships
+   *
+   * @return an ArrayList of ships on the user's board
+   */
+  public ArrayList<Ship> getShips() {
+    return this.ships;
+  }
+
+  /**
+   * Gets the user's board
+   *
+   * @return a Coord[][] of the user's board
+   */
+  public Coord[][] getUserBoard() {
+    return this.userBoard;
+  }
+
+  /**
    * Given the list of shots the opponent has fired on this player's board, report which
    * shots hit a ship on this player's board.
    *
@@ -328,46 +340,6 @@ public abstract class SalvoPlayer implements Player {
         this.opponentBoard[i][j] = new Coord(i, j, CoordType.EMPTY);
       }
     }
-  }
-
-  /**
-   * Packages a board as a String
-   *
-   * @param boardType which player's board to package
-   * @return the given player's board packaged as a String
-   */
-  public String packageBoard(BoardType boardType) {
-
-    StringBuilder board = new StringBuilder();
-    for (Coord[] coords : this.userBoard) {
-      for (Coord coord : coords) {
-        CoordType type = coord.getType();
-        if (boardType.equals(BoardType.USER)) {
-          switch (type) {
-            case HIT -> board.append(ANSI_RED).append(type).append(ANSI_RESET).append(" ");
-            case MISS -> board.append(ANSI_YELLOW).append(type).append(ANSI_RESET).append(" ");
-            case SHIP -> {
-              String symbol = " ";
-              for (Ship s : this.ships) {
-                if (s.getCoords().contains(coord)) {
-                  symbol = s.toString();
-                }
-              }
-              board.append(ANSI_CYAN).append(symbol).append(ANSI_RESET).append(" ");
-            }
-            default -> board.append(CoordType.EMPTY).append(" ");
-          }
-        } else {
-          switch (type) {
-            case HIT -> board.append(ANSI_RED).append(type).append(ANSI_RESET).append(" ");
-            case MISS -> board.append(ANSI_YELLOW).append(type).append(ANSI_RESET).append(" ");
-            default -> board.append(CoordType.EMPTY).append(" ");
-          }
-        }
-      }
-      board.append(System.getProperty("line.separator"));
-    }
-    return board.toString();
   }
 
 }
