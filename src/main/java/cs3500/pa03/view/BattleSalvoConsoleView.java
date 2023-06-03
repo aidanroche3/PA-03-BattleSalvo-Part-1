@@ -159,6 +159,7 @@ public class BattleSalvoConsoleView implements BattleSalvoView {
    *
    * @param player the player to display
    * @param board  the player's board
+   * @param type the visibility level to display the board
    */
   @Override
   public void displayBoard(SalvoPlayer player, Coord[][] board, BoardType type) {
