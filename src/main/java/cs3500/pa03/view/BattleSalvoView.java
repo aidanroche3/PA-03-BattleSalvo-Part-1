@@ -65,6 +65,7 @@ public interface BattleSalvoView {
    *
    * @param player the player to display
    * @param board the player's board
+   * @param type the visibility level to display the board
    */
   void displayBoard(SalvoPlayer player, Coord[][] board, BoardType type);
 
